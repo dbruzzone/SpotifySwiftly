@@ -1,0 +1,1 @@
+pod 'Spotify-iOS-SDK', '~> 1.0'
