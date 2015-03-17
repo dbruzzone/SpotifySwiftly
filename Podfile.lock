@@ -1,0 +1,10 @@
+PODS:
+  - Spotify-iOS-SDK (1.0.1)
+
+DEPENDENCIES:
+  - Spotify-iOS-SDK (~> 1.0)
+
+SPEC CHECKSUMS:
+  Spotify-iOS-SDK: 4c2112dff7b6e5b0ac241fc7c1f1c901e0b77352
+
+COCOAPODS: 0.35.0
