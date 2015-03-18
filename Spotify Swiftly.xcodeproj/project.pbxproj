@@ -40,6 +40,7 @@
 		2F9897F41AB860F6007077C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F9897F51AB860F6007077C7 /* Spotify_SwiftlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spotify_SwiftlyTests.swift; sourceTree = "<group>"; };
 		2F9898061AB9AB64007077C7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2F9898081AB9ACB7007077C7 /* SpotifySwiftly-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpotifySwiftly-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E0EB4B4EA14B838403AC530 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D40217577EF93319D3582C4A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -87,6 +88,7 @@
 		2F9897DC1AB860F6007077C7 /* Spotify Swiftly */ = {
 			isa = PBXGroup;
 			children = (
+				2F9898081AB9ACB7007077C7 /* SpotifySwiftly-Bridging-Header.h */,
 				2F9897DF1AB860F6007077C7 /* AppDelegate.swift */,
 				2F9897E11AB860F6007077C7 /* ViewController.swift */,
 				2F9897E31AB860F6007077C7 /* Main.storyboard */,
@@ -403,6 +405,7 @@
 				INFOPLIST_FILE = "Spotify Swiftly/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SpotifySwiftly-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -414,6 +417,7 @@
 				INFOPLIST_FILE = "Spotify Swiftly/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SpotifySwiftly-Bridging-Header.h";
 			};
 			name = Release;
 		};
