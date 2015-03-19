@@ -10,13 +10,103 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
+    // Constants
+    // TODO: Replace "your-client-id" with your app's client ID
+    let kClientId = "your-client-id"
+    let kCallbackURL = "spotify-swiftly-login://callback"
+    // TODO: If you deploy your token swap service on Heroku, don't forget to specify
+    // it's URL here!
+    let kTokenSwapURL = "http://localhost:1234/swap"
+
+    var session: SPTSession?
+    var player: SPTAudioStreamingController?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        // Create SPTAuth instance; create login URL and open it
+        var auth: SPTAuth = SPTAuth.defaultInstance()
+
+        auth.redirectURL = NSURL(string: kCallbackURL)
+        auth.tokenSwapURL = NSURL(string: kTokenSwapURL)
+
+        var loginURL: NSURL =
+            SPTAuth.loginURLForClientId(kClientId,
+                                        withRedirectURL: NSURL(string: kCallbackURL),
+                                        scopes: [SPTAuthStreamingScope],
+                                        responseType: "code")
+        
+        // Opening a URL in Safari close to application launch may trigger
+        // an iOS bug, so we wait a bit before doing so.
+        let params = ["application": application, "loginURL": loginURL]
+        var timer =
+            NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("openBrowser:"), userInfo: params, repeats: false)
+
         return true
+    }
+
+    func openBrowser(timer: NSTimer) {
+        var userInfo = timer.userInfo as NSDictionary
+        var application = userInfo["application"] as UIApplication
+        var loginURL = userInfo["loginURL"] as NSURL
+
+        application.openURL(loginURL)
+    }
+
+    // Handle auth callback
+    func application(application: UIApplication,
+        openURL url: NSURL,
+        sourceApplication: String?,
+        annotation: AnyObject?) -> Bool {
+
+        // Ask SPTAuth if the URL given is a Spotify authentication callback
+        if (SPTAuth.defaultInstance().canHandleURL(url)) {
+            // Call the token swap service to get a logged in session
+            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback: { (error: NSError!, session: SPTSession!) in
+                if (error != nil) {
+                    println("Authentication error: \(error)")
+
+                    return
+                }
+
+                self.playUsingSession(session)
+            })
+
+            return true
+        } else {
+            return false
+        }
+    }
+
+    func playUsingSession(session: SPTSession) {
+        // Create a new player if needed
+        if (self.player == nil) {
+            self.player = SPTAudioStreamingController(clientId: kClientId)
+        }
+
+        self.player?.loginWithSession(session, callback: { (error: NSError!) in
+            if (error != nil) {
+                println("An error occured while enabling playback: \(error)")
+                
+                return
+            }
+            
+            SPTRequest.requestItemAtURI(NSURL(string: "spotify:album:4L1HDyfdGIkACuygktO7T7"), withSession: nil, callback: { (error: NSError!, id: AnyObject!) in
+                if (error != nil) {
+                    println("An error occured during album lookup: \(error)")
+                    
+                    return
+                }
+
+                self.player?.playURIs(["spotify:album:4L1HDyfdGIkACuygktO7T7"], withOptions: nil, callback: { (error: NSError!) in
+                    if (error != nil) {
+                        println("An error occured during album lookup: \(error)")
+                        
+                        return
+                    }
+                })
+            })
+        })
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -40,7 +130,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-
